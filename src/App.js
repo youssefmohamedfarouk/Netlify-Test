@@ -1,25 +1,42 @@
 import logo from './logo.svg';
 import './App.css';
+import { useState } from 'react';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+  const [drinks , setDrinks] = useState([]);
+
+  function getDrinksOnClick() {
+    const options = {
+    method: 'GET',
+    headers: {
+      'X-RapidAPI-Key': process.env.REACT_APP_API_KEY ,
+      'X-RapidAPI-Host': 'the-cocktail-db.p.rapidapi.com'
+    }
+  };
+  
+  fetch('https://the-cocktail-db.p.rapidapi.com/randomselection.php', options)
+    .then(response => response.json())
+    .then(data => {
+      console.log(data);
+      setDrinks(data.drinks);
+    });
+}
+
+return (
+  <div>
+    <button onClick={getDrinksOnClick}>Get Drinks</button>
+    {
+      drinks.map(d => {
+        return (
+          <div>
+            { d.strDrink }
+          </div>
+        )
+      })
+    }
+  </div>
+)
+
 }
 
 export default App;
